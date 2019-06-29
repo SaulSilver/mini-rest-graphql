@@ -1,29 +1,8 @@
-import http from "http";
-import express from "express";
-import cors from "cors";
-import bodyParser from "body-parser";
-import api from "./api";
-import config from "./config.json";
+import initGraphQLServer from "./graphql";
+import initRestServer from "./rest";
 
-let app = express();
-app.server = http.createServer(app);
+// GraphQL
+initGraphQLServer();
 
-// 3rd party middleware
-app.use(
-  cors({
-    exposedHeaders: config.corsHeaders
-  })
-);
-
-app.use(
-  bodyParser.json({
-    limit: config.bodyLimit
-  })
-);
-
-app.use("/api", api({ config }));
-app.server.listen(process.env.PORT || config.port, () => {
-  console.log(`Started on port ${app.server.address().port}`);
-});
-
-export default app;
+//REST
+initRestServer();
