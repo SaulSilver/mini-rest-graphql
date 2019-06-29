@@ -42,7 +42,7 @@ export default () => {
   );
 
   app.use("/", router());
-  app.server.listen(process.env.REST_PORT || config.port, () => {
+  app.server.listen(process.env.REST_PORT || config.restPort, () => {
     console.log(`REST server is running on port ${app.server.address().port}`);
   });
   return app;
