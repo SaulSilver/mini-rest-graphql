@@ -10,7 +10,7 @@ export default function() {
 
   type Query {
       products: [Product],
-      product(id: ID!): Product
+      product(id: ID!): Product,
   }
 
   type Product {
@@ -29,6 +29,11 @@ export default function() {
     Query: {
       products: () => products,
       product: (_, { id }) => findProduct(id)
+    },
+    Product: {
+      // product transaction is an array in the "DB" but
+      // it's called `transactions` in the GraphQL Schema (not sure why)
+      transactions: product => product.transaction
     }
   };
 
