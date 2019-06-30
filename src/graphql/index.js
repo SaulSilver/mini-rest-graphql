@@ -31,7 +31,12 @@ type Mutation {
 }
 
 type Subscription {
-  product: Product!
+  product: productSubscriptionPayload! 
+}
+
+type productSubscriptionPayload {
+  mutationType: String!
+  node: Product!
 }
 `;
 
@@ -59,16 +64,25 @@ const resolvers = {
       };
       products.push(newProd);
       pubsub.publish("product", {
-        product: newProd
+        product: {
+          mutationType: "CREATE",
+          node: newProd
+        }
       });
       return newProd;
     },
-    deleteProduct: (parent, { id }) => {
+    deleteProduct: (parent, { id }, { pubsub }) => {
       const prodIndex = products.findIndex(product => product.id === id);
       if (prodIndex < 0) throw new Error("Product does not exist");
 
-      const deletedProd = products.splice(prodIndex, 1);
-      return deletedProd[0];
+      const deletedProd = products.splice(prodIndex, 1)[0];
+      pubsub.publish("product", {
+        product: {
+          mutationType: "DELETE",
+          node: deletedProd
+        }
+      });
+      return deletedProd;
     }
   },
   Subscription: {
