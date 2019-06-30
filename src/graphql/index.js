@@ -27,6 +27,7 @@ type Transaction {
 
 type Mutation {
   createProduct: Product!
+  deleteProduct(id: ID!): Product!
 }
 
 `;
@@ -55,6 +56,13 @@ const resolvers = {
       };
       products.push(newProd);
       return newProd;
+    },
+    deleteProduct: (_, { id }) => {
+      const prodIndex = products.findIndex(product => product.id === id);
+      if (prodIndex < 0) throw new Error("Product does not exist");
+
+      const deletedProd = products.splice(prodIndex, 1);
+      return deletedProd[0];
     }
   }
 };
