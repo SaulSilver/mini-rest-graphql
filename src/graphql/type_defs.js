@@ -3,11 +3,6 @@ import TimestampType from "./timestamp_type";
 const typeDefs = `
 scalar TimestampType
 
-type Query {
-    products: [Product],
-    product(id: ID!): Product,
-}
-
 type Product {
   id: ID!
   transactions: [Transaction!] 
@@ -19,8 +14,14 @@ type Transaction {
   time: TimestampType
 }
 
+type Query {
+    products: [Product],
+    product(id: ID!): Product,
+}
+
 type Mutation {
   createProduct: Product!
+  updateProduct(id: ID!, quantity: Int!): Product!
   deleteProduct(id: ID!): Product!
 }
 

@@ -1,5 +1,5 @@
 import products from "../models/products";
-import { findProduct, randomize } from "../utils";
+import { findProduct, findProdIndex, randomize } from "../utils";
 
 const resolvers = {
   Query: {
@@ -32,8 +32,23 @@ const resolvers = {
       });
       return newProd;
     },
+    updateProduct: (parent, { id, quantity }, { pubsub }) => {
+      const prodIndex = findProdIndex(id);
+      if (prodIndex < 0) throw new Error("Product does not exist");
+
+      products[prodIndex].transaction = [
+        { id: randomize(600).toString(), quantity, time: 1559328117100 }
+      ];
+      pubsub.publish("product", {
+        product: {
+          mutationType: "UPDATE",
+          node: products[prodIndex]
+        }
+      });
+      return products[prodIndex];
+    },
     deleteProduct: (parent, { id }, { pubsub }) => {
-      const prodIndex = products.findIndex(product => product.id === id);
+      const prodIndex = findProdIndex(id);
       if (prodIndex < 0) throw new Error("Product does not exist");
 
       const deletedProd = products.splice(prodIndex, 1)[0];
