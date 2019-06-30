@@ -1,4 +1,4 @@
-import { GraphQLServer } from "graphql-yoga";
+import { GraphQLServer, PubSub } from "graphql-yoga";
 import TimestampType from "./timestamp_type";
 import config from "../config.json";
 import products from "../models/products";
@@ -30,12 +30,15 @@ type Mutation {
   deleteProduct(id: ID!): Product!
 }
 
+type Subscription {
+  product: Product!
+}
 `;
 
 const resolvers = {
   Query: {
     products: () => products,
-    product: (_, { id }) => findProduct(id)
+    product: (parent, { id }) => findProduct(id)
   },
   Product: {
     // product transaction is an array in the "DB" but
@@ -43,7 +46,7 @@ const resolvers = {
     transactions: product => product.transaction
   },
   Mutation: {
-    createProduct: () => {
+    createProduct: (parent, args, { pubsub }) => {
       const newProd = {
         id: randomize(600).toString(),
         transaction: [
@@ -55,20 +58,31 @@ const resolvers = {
         ]
       };
       products.push(newProd);
+      pubsub.publish("product", {
+        product: newProd
+      });
       return newProd;
     },
-    deleteProduct: (_, { id }) => {
+    deleteProduct: (parent, { id }) => {
       const prodIndex = products.findIndex(product => product.id === id);
       if (prodIndex < 0) throw new Error("Product does not exist");
 
       const deletedProd = products.splice(prodIndex, 1);
       return deletedProd[0];
     }
+  },
+  Subscription: {
+    product: {
+      subscribe(parent, args, { pubsub }) {
+        return pubsub.asyncIterator("product");
+      }
+    }
   }
 };
 
 export default function() {
-  const graphQlServer = new GraphQLServer({ typeDefs, resolvers });
+  const pubsub = new PubSub();
+  const graphQlServer = new GraphQLServer({ typeDefs, resolvers, context: { pubsub } });
   const options = { port: process.env.GRAPHQL_PORT || config.graphQlPort };
   graphQlServer.start(options, () =>
     console.log(`GraphQL server is running on port ${options.port}`)
