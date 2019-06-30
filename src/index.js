@@ -4,5 +4,5 @@ import initRestServer from "./rest";
 // GraphQL
 initGraphQLServer();
 
-//REST
+// REST
 initRestServer();

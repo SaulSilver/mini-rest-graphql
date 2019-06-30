@@ -1,4 +1,4 @@
-import TimestampType from "./timestamp_type";
+import TimestampType from "./timestamp_type"; // Timestamp for the `time` field as unix time
 
 const typeDefs = `
 scalar TimestampType

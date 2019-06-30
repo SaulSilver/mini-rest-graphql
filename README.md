@@ -27,13 +27,13 @@ npm start
 
 ## Part 1: REST
 
-Query the products with REST (POST and/or GET) api.
+Query the products with REST (GET) api.
 
 Query for all products
 
     /products
 
-Expected output should be similar to:
+Output is similar to:
 
 ```
 [
@@ -64,7 +64,7 @@ Query for one particular product by id
 
     /products/:id
 
-Expected output should be similar to:
+Output is similar to:
 
 ```
 {
@@ -78,6 +78,58 @@ Expected output should be similar to:
   ]
 }
 ```
+
+## Part 2; GraphQL
+
+Query the same products with GraphQL.
+
+```
+query products {
+  products {
+    id
+    transactions {
+      id
+      quantity
+      time
+    }
+  }
+}
+```
+
+And then for single product:
+
+```
+query product {
+  product(id: "abc123") {
+    id
+    transactions {
+      id
+      quantity
+      time
+    }
+  }
+}
+```
+
+Output is same as Part 1: Rest API above.
+
+## Part 3: GraphQL Subscriptions
+
+A minimal websocket and/or graphql subscription solution which sends updates to the client about single product.
+
+So, whenever we add/remove/update a single transaction on any product or the whole product, the playground/ws client should know about that specific post and transaction in some way.
+
+Showcase/provide your own subscription resolver without us providing any specific format.
+
+Example workflow on playground:
+
+1. I am subscribing to products
+2. On another tab I triggered createProduct mutation
+3. On the subscribing tab, it shows something was created
+4. I go back to other tab and trigger createProduct again
+5. On the subscribing tab, it shows something was created
+
+Link to sample video: https://www.youtube.com/watch?v=LVUEpv8Mvr0&
 
 ## License
 

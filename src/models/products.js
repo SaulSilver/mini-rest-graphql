@@ -1,3 +1,4 @@
+// This array of products is a mock of DB
 const products = [
   {
     id: "abc123",

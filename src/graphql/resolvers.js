@@ -35,7 +35,7 @@ const resolvers = {
     updateProduct: (parent, { id, quantity }, { pubsub }) => {
       const prodIndex = findProdIndex(id);
       if (prodIndex < 0) throw new Error("Product does not exist");
-
+      // For simplicity, I put a default transaction with the request quanityt, random ID & hardcoded timestamp
       products[prodIndex].transaction = [
         { id: randomize(600).toString(), quantity, time: 1559328117100 }
       ];
