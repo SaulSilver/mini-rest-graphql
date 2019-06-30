@@ -1,15 +1,18 @@
-# Express & ES6 REST API Boilerplate
+# ES6 REST & GraphQL APIs
 
-This is based on [boilerplate](https://github.com/developit/express-es6-rest-api) for building REST APIs with ES6 and Express.
+This is based on [boilerplate](https://github.com/developit/express-es6-rest-api) for building REST APIs with ES6 and Express. GraphQL is also added and built using `graphql-yoga` with its websockets for Subscriptions and nice playground interface.
 
 - ES6 support via [babel](https://babeljs.io)
 - CORS support via [cors](https://github.com/troygoode/node-cors)
 - Body Parsing via [body-parser](https://github.com/expressjs/body-parser)
+- GraphQL Prisma via [graphql-yoga](https://github.com/prisma/graphql-yoga)
 
 ### Remarks
 
-1. There is no database, just a simple `products.js` file with an array of products.
-2. The REST API contains the verb `GET` only to fetch product(s). `POST` is not implemented because it is not normally used for fetching data.
+1. A simple `products.js` file with an array of products used as a DB mock.
+2. REST API contains the verb `GET` only to fetch product(s). `POST` is not implemented because it is not normally used for fetching data.
+3. GraphQL contains CUD operations on products. Ability to update a product transaction by replacing it.
+4. Ability to subscribe to `products`
 
 ## Getting Started
 
